@@ -4,9 +4,21 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:local="clr-namespace:RMWPFUserInterfice.Views"
-        mc:Ignorable="d"
-        Title="ShellView" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+        mc:Ignorable="d" FontSize="18"
+        Title="ShellView" Height="450" Width="800" >
+
+        <DockPanel>
+                <Menu DockPanel.Dock="Top" FontSize="18">
+                        <MenuItem Header="_File">
+                                
+                        </MenuItem>
+                        <MenuItem Header="_Account">
+                                <MenuItem x:Name="LoginScreen" Header="_Login" />
+                        </MenuItem>
+                </Menu>
+                <Grid>
+
+                        <ContentControl x:Name="ActiveItem" Margin="5" />
+                </Grid>
+        </DockPanel>
 </Window>

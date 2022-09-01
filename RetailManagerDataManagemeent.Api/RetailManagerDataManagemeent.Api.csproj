@@ -15,11 +15,11 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Controllers" />
+      <ProjectReference Include="..\BridgeAuthenticationConfigBetweenProject.Library\BridgeAuthenticationConfigBetweenProject.Library.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\BridgeAuthenticationConfigBetweenProject.Library\BridgeAuthenticationConfigBetweenProject.Library.csproj" />
+      <Folder Include="Controllers" />
     </ItemGroup>
 
 </Project>

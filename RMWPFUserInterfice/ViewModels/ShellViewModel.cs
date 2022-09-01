@@ -1,6 +1,8 @@
-﻿namespace RMWPFUserInterfice.ViewModels;
+﻿using Caliburn.Micro;
 
-public class ShellViewModel
+namespace RMWPFUserInterfice.ViewModels;
+
+public class ShellViewModel : Conductor<object>
 {
     
 }
