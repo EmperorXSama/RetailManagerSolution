@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RetailManagerDataManagemeen
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BridgeAuthenticationConfigBetweenProject.Library", "BridgeAuthenticationConfigBetweenProject.Library\BridgeAuthenticationConfigBetweenProject.Library.csproj", "{A5676156-96DC-457F-9819-8B5EDD8F7866}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RMWPFUserInterfice", "RMWPFUserInterfice\RMWPFUserInterfice.csproj", "{CE2CD78D-B849-4CEB-A67A-BE089A0CF488}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{A5676156-96DC-457F-9819-8B5EDD8F7866}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A5676156-96DC-457F-9819-8B5EDD8F7866}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A5676156-96DC-457F-9819-8B5EDD8F7866}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE2CD78D-B849-4CEB-A67A-BE089A0CF488}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE2CD78D-B849-4CEB-A67A-BE089A0CF488}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE2CD78D-B849-4CEB-A67A-BE089A0CF488}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE2CD78D-B849-4CEB-A67A-BE089A0CF488}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
