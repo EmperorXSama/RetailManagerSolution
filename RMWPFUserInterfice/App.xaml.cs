@@ -24,7 +24,7 @@ namespace RMWPFUserInterfice
         private static readonly string ClientId = "a985b751-a830-4700-8f0f-c3b2fc1a73fe";
         private static readonly string RedirectUri = $"http://localhost";
 
-        public static string PolicySignUpSignIn = "B2C_1_si";
+        public static string PolicySignUpSignIn = "B2C_1_susi";
         private static string PolicyEditProfile = "B2C_1_edit_profile";
         private static string PolicyResetPassword = "B2C_1_reset_password";
 
@@ -33,9 +33,9 @@ namespace RMWPFUserInterfice
             "https://RetailManage.onmicrosoft.com/RetailManagerApi/data.write"
             
         };
-        public static string ApiEndpoint = "https://localhost:7145/";
-        
-        
+        public static string GetUserEndPoint = $"https://localhost:7145/api/User/GetUserById";
+
+
         // Shouldn't need to change these:
         private static readonly string AuthorityBase = $"https://{AzureAdB2CHostname}/tfp/{Tenant}/";
         private static readonly string AuthoritySignUpSignIn = $"{AuthorityBase}{PolicySignUpSignIn}";

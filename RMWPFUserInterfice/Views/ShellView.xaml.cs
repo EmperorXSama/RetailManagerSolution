@@ -82,13 +82,7 @@ public partial class ShellView : Window
         }
         
     }
-
-    /// <summary>
-    /// Perform an HTTP GET request to a URL using an HTTP Authorization header
-    /// </summary>
-    /// <param name="url">The URL</param>
-    /// <param name="token">The token</param>
-    /// <returns>String containing the results of the GET operation</returns>
+    
     public async Task<string> GetHttpContentWithToken(string url, string token)
     {
         var httpClient = new HttpClient();
@@ -106,55 +100,58 @@ public partial class ShellView : Window
             return ex.ToString();
         }
     }
-    // private async  void CallApi_Click(object sender, RoutedEventArgs e)
-    // {
-    //     AuthenticationResult authResult = null;
-    //     var app = App.PublicClientApp;
-    //     var accounts = await app.GetAccountsAsync(App.PolicySignUpSignIn);
-    //     try
-    //     {
-    //             
-    //         authResult = await app.AcquireTokenSilent(App.ApiScopes, accounts.FirstOrDefault())
-    //             .ExecuteAsync();
-    //         httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authResult.AccessToken);
-    //     }
-    //     catch (MsalUiRequiredException ex)
-    //     {
-    //         // A MsalUiRequiredException happened on AcquireTokenSilentAsync. 
-    //         // This indicates you need to call AcquireTokenAsync to acquire a token
-    //         Debug.WriteLine($"MsalUiRequiredException: {ex.Message}");
-    //
-    //         try
-    //         {
-    //             authResult = await app.AcquireTokenInteractive(App.ApiScopes)
-    //                 .WithParentActivityOrWindow(new WindowInteropHelper(this).Handle)
-    //                 .ExecuteAsync();
-    //         }
-    //         catch (MsalException msalex)
-    //         {
-    //             ResultText.Text = $"Error Acquiring Token:{Environment.NewLine}{msalex}";
-    //         }
-    //     }
-    //     catch (Exception ex)
-    //     {
-    //         ResultText.Text = $"Error Acquiring Token Silently:{Environment.NewLine}{ex}";
-    //         return;
-    //     }
-    //
-    //     if (authResult != null)
-    //     {
-    //         if (string.IsNullOrEmpty(authResult.AccessToken))
-    //         {
-    //             ResultText.Text = "Access token is null (could be expired). Please do interactive log-in again." ;
-    //         }
-    //         else
-    //         {
-    //             ResultText.Text = await GetHttpContentWithToken(App.ApiEndpoint, authResult.AccessToken);
-    //             DisplayUserInfo(authResult);
-    //         }
-    //     }
-    // }
-    
+    private async  void GetUserById(object sender, RoutedEventArgs e)
+    {
+        AuthenticationResult authResult = null;
+        var app = App.PublicClientApp;
+        var accounts = await app.GetAccountsAsync(App.PolicySignUpSignIn);
+        try
+        {
+                
+            authResult = await app.AcquireTokenSilent(App.ApiScopes, accounts.FirstOrDefault())
+                .ExecuteAsync();
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authResult.AccessToken);
+        }
+        catch (MsalUiRequiredException ex)
+        {
+            // A MsalUiRequiredException happened on AcquireTokenSilentAsync. 
+            // This indicates you need to call AcquireTokenAsync to acquire a token
+            Debug.WriteLine($"MsalUiRequiredException: {ex.Message}");
+
+            try
+            {
+                authResult = await app.AcquireTokenInteractive(App.ApiScopes)
+                    .WithParentActivityOrWindow(new WindowInteropHelper(this).Handle)
+                    .ExecuteAsync();
+            }
+            catch (MsalException msalex)
+            {
+                //ResultText.Text = $"Error Acquiring Token:{Environment.NewLine}{msalex}";
+            }
+        }
+        catch (Exception ex)
+        {
+            //ResultText.Text = $"Error Acquiring Token Silently:{Environment.NewLine}{ex}";
+            return;
+        }
+
+        if (authResult != null)
+        {
+            if (string.IsNullOrEmpty(authResult.AccessToken))
+            {
+                //ResultText.Text = "Access token is null (could be expired). Please do interactive log-in again." ;
+            }
+            else
+            {
+                JObject user = ParseIdToken(authResult.IdToken);
+                 var response = await GetHttpContentWithToken($"{App.GetUserEndPoint}/{user["oid"]?.ToString()}", authResult.AccessToken);
+
+                 Info.Text += response;
+            }
+        }
+    }
+
+
 
     JObject ParseIdToken(string idToken)
     {
