@@ -5,8 +5,15 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:RMWPFUserInterfice.Views"
              mc:Ignorable="d"
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="400" d:DesignWidth="450" 
+             >
     <Grid>
-        
+        <TextBox HorizontalAlignment="Center" Height="48" TextWrapping="Wrap" Text="Sign In"
+                 Width="191" VerticalAlignment="Top" Margin="0,65,0,0" FontFamily="Arial" FontSize="40" 
+                 FontWeight="Bold"
+                 Foreground="#FF534C4C" TextAlignment="Center" BorderThickness="0" />
+        <Button Content="Login" Height="50" Width="120" Margin="0,148,0,30"
+                HorizontalAlignment="Center" VerticalAlignment="Center" Background="#026C7C" Foreground="#CFD4C5"
+                FontFamily="Arial" FontSize="20" BorderBrush="#0E0F19"/>
     </Grid>
 </UserControl>

@@ -1,6 +1,8 @@
-﻿namespace RMWPFUserInterfice.ViewModels;
+﻿using Caliburn.Micro;
 
-public class LoginViewModel
+namespace RMWPFUserInterfice.ViewModels;
+
+public class LoginViewModel : Screen
 {
     
 }

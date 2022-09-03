@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Windows;
 using Caliburn.Micro;
+using RMWPFUserInterface.Library.Helpers;
+using RMWPFUserInterface.Library.Models;
 using RMWPFUserInterfice.ViewModels;
 
 namespace RMWPFUserInterfice;
@@ -19,8 +22,11 @@ public class Bootstrapper : BootstrapperBase
         _container.Instance(_container);
         _container
             .Singleton<IWindowManager, WindowManager>()
-            .Singleton<IEventAggregator, EventAggregator>();
-
+            .Singleton<IEventAggregator, EventAggregator>()
+            .Singleton<ILoggedInUserModel,LoggedInUserModel>()
+            .Singleton<HttpClient>()
+            .Singleton<IApiHelper, ApiHelper>();
+        
         GetType().Assembly.GetTypes()
             .Where(type => type.IsClass)
             .Where(type => type.Name.EndsWith("ViewModel"))
@@ -31,7 +37,7 @@ public class Bootstrapper : BootstrapperBase
 
     protected override void OnStartup(object sender, StartupEventArgs e)
     {
-        DisplayRootViewForAsync<ShellViewModel>();
+        DisplayRootViewFor<ShellViewModel>();
     }
 
     protected override object GetInstance(Type service, string key)

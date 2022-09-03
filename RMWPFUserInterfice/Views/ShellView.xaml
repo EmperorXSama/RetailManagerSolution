@@ -15,13 +15,11 @@
                         <MenuItem Header="_Account">
                                 <MenuItem x:Name="LoginScreen" Header="_Login" Click="SignInButton_Click"/>
                                 <MenuItem x:Name="Logout" Header="_out" Click="SignOutButton_Click"/>
-                                <MenuItem x:Name="Api" Header="_callApi" Click="GetUserById"/>
                         </MenuItem>
                 </Menu>
                 <Grid>
 
                         <ContentControl x:Name="ActiveItem" Margin="5" />
-                        <TextBox x:Name="Info" ></TextBox>
                 </Grid>
         </DockPanel>
 </Window>

@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RMWPFUserInterfice", "RMWPF
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RM.Library", "RM.Library\RM.Library.csproj", "{039BD4CB-79AD-4499-8B42-A18CC605540F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RMWPFUserInterface.Library", "RMWPFUserInterface.Library\RMWPFUserInterface.Library.csproj", "{74CB51FC-9230-4F52-B664-6AD9857A134E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{039BD4CB-79AD-4499-8B42-A18CC605540F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{039BD4CB-79AD-4499-8B42-A18CC605540F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{039BD4CB-79AD-4499-8B42-A18CC605540F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{74CB51FC-9230-4F52-B664-6AD9857A134E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{74CB51FC-9230-4F52-B664-6AD9857A134E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{74CB51FC-9230-4F52-B664-6AD9857A134E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{74CB51FC-9230-4F52-B664-6AD9857A134E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

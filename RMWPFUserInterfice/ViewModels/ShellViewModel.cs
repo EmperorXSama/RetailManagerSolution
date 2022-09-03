@@ -2,7 +2,13 @@
 
 namespace RMWPFUserInterfice.ViewModels;
 
-public class ShellViewModel : Conductor<object>
+public sealed class ShellViewModel : Conductor<object>
 {
-    
+    private readonly LoginViewModel _loginVm;
+
+    public ShellViewModel(LoginViewModel loginVM)
+    {
+        _loginVm = loginVM;
+        ActivateItem(loginVM);
+    }
 }
