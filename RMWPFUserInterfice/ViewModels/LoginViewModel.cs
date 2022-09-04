@@ -5,6 +5,7 @@ using Caliburn.Micro;
 using Microsoft.Identity.Client;
 using RMWPFUserInterface.Library.Helpers;
 using RMWPFUserInterface.Library.Models;
+using RMWPFUserInterfice.EventModels;
 using RMWPFUserInterfice.Views;
 
 namespace RMWPFUserInterfice.ViewModels;
@@ -12,12 +13,14 @@ namespace RMWPFUserInterfice.ViewModels;
 public class LoginViewModel : Screen
 {
     private readonly ILoggedInUserModel _loggedInUserModel;
+    private readonly IEventAggregator _eventHandler;
     private IApiHelper _apiHelper;
 
-    public LoginViewModel(IApiHelper apiHelper , ILoggedInUserModel loggedInUserModel)
+    public LoginViewModel(IApiHelper apiHelper , ILoggedInUserModel loggedInUserModel , IEventAggregator eventHandler)
     {
         _apiHelper = apiHelper;
         _loggedInUserModel = loggedInUserModel;
+        _eventHandler = eventHandler;
     }
     public async void LogIn(object sender, RoutedEventArgs e)
     {
@@ -31,8 +34,12 @@ public class LoginViewModel : Screen
                 .WithParentActivityOrWindow(new WindowInteropHelper(new ShellView()).Handle)
                 .ExecuteAsync();
             
-            // capture more information about the user 
+            // capture more information about the user
+           
             await _apiHelper.GetLoggedInUserInfo(authResult.UniqueId, authResult.AccessToken);
+            
+            // creating the event handler for the after logged in success 
+            _eventHandler.PublishOnUIThread(new LogOnEventModel());
         }
         catch (MsalException ex)
         {
@@ -61,5 +68,6 @@ public class LoginViewModel : Screen
             //ResultText.Text = $"Error Acquiring Token:{Environment.NewLine}{ex}";
         }
         
+
     }
 }

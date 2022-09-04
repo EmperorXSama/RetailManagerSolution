@@ -1,14 +1,37 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Threading.Tasks;
 using Caliburn.Micro;
+using RMWPFUserInterface.Library.Helpers;
+using RMWPFUserInterface.Library.Models;
 
 namespace RMWPFUserInterfice.ViewModels;
 
 public class SalesViewModel : Screen
 {
-    private BindingList<string> _products;
+    private readonly IProductEndPoint _productEndPoint;
+    private readonly ILoggedInUserModel _loggerUser;
 
-    public BindingList<string> Products
+    public SalesViewModel(IProductEndPoint productEndPoint , ILoggedInUserModel loggerUser)
+    {
+        _productEndPoint = productEndPoint;
+        _loggerUser = loggerUser;
+    }
+
+    protected override async  void OnViewLoaded(object view)
+    {
+        base.OnViewLoaded(view);
+        await LoadData();
+    }
+
+    private async Task LoadData()
+    {
+        var productList = await _productEndPoint.GetAllProducts(_loggerUser.Token);
+        Products = new BindingList<ProductsModel>(productList);
+    }
+    
+    private BindingList<ProductsModel> _products;
+    public BindingList<ProductsModel> Products
     {
         get => _products;
         set
@@ -18,9 +41,10 @@ public class SalesViewModel : Screen
         }
     }
 
-    private BindingList<string> _cart;
+    
+    private BindingList<ProductsModel> _cart;
 
-    public BindingList<string> Cart
+    public BindingList<ProductsModel> Cart
     {
         get => _cart;
         set

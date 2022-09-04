@@ -7,7 +7,9 @@ namespace RMWPFUserInterface.Library.Helpers;
 public class ApiHelper : IApiHelper
 {
     private  ILoggedInUserModel _loggedInUser;
-    public HttpClient ApiClient = new HttpClient();
+    private HttpClient _apiClient = new HttpClient();
+
+    public HttpClient ApiClient => _apiClient;
 
     public ApiHelper(ILoggedInUserModel loggedInUser)
     {
@@ -15,24 +17,24 @@ public class ApiHelper : IApiHelper
         InitializeClient();
     }
 
-    public void InitializeClient()
+    private void InitializeClient()
     {
         string api = ConfigurationManager.AppSettings["api"]!;
 
-        ApiClient.BaseAddress = new Uri(api);
-        ApiClient.DefaultRequestHeaders.Accept.Clear();
-        ApiClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+        _apiClient.BaseAddress = new Uri(api);
+        _apiClient.DefaultRequestHeaders.Accept.Clear();
+        _apiClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
     }
 
     public async Task<ILoggedInUserModel> GetLoggedInUserInfo(string stringId , string token)
     {
-        ApiClient.DefaultRequestHeaders.Clear();
-        ApiClient.DefaultRequestHeaders.Accept.Clear();
-        ApiClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-        ApiClient.DefaultRequestHeaders.Add("Authorization",$"Bearer {token}");
+        _apiClient.DefaultRequestHeaders.Clear();
+        _apiClient.DefaultRequestHeaders.Accept.Clear();
+        _apiClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+        _apiClient.DefaultRequestHeaders.Add("Authorization",$"Bearer {token}");
 
-        using (HttpResponseMessage response = await ApiClient.GetAsync($"api/User/GetUserById/{stringId}"))
+        using (HttpResponseMessage response = await _apiClient.GetAsync($"api/User/GetUserById/{stringId}"))
         {
             if (response.IsSuccessStatusCode)
             {

@@ -40,6 +40,7 @@ public static class DependencyInjection
     {
         builder.Services.AddSingleton<ISqlDataAccess, SqlDataAccess>();
         builder.Services.AddSingleton<IUserData, UserData>();
+        builder.Services.AddSingleton<IProductData, ProductData>();
     }
 
     public static void AddSwaggerServices(this WebApplicationBuilder builder)

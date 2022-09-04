@@ -5,7 +5,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:local="clr-namespace:RMWPFUserInterfice.Views"
         mc:Ignorable="d" FontSize="18"
-        Title="ShellView" Height="450" Width="800" WindowStyle="ThreeDBorderWindow">
+        Title="ShellView"  MinHeight="500" MinWidth="600" WindowStyle="ThreeDBorderWindow">
 
         <DockPanel>
                 <Menu  Padding="3" Background="White" DockPanel.Dock="Top" FontSize="18" HorizontalAlignment="Center ">
