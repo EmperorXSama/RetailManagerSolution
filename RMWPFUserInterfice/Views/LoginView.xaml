@@ -71,6 +71,7 @@
                  Foreground="#FF534C4C" TextAlignment="Center" BorderThickness="0" />
         <Button Style="{DynamicResource RoundedButton}" Content="Login" Height="50" Width="220" Margin="0,148,0,30"
                 HorizontalAlignment="Center" VerticalAlignment="Center" Background="#026C7C" Foreground="White"
-                FontFamily="Arial" FontSize="20" BorderBrush="#0E0F19"/>
+                FontFamily="Arial" FontSize="20" BorderBrush="#0E0F19" x:Name="LogIn"/>
+
     </Grid>
 </UserControl>

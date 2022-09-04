@@ -5,16 +5,15 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:local="clr-namespace:RMWPFUserInterfice.Views"
         mc:Ignorable="d" FontSize="18"
-        Title="ShellView" Height="450" Width="800" >
+        Title="ShellView" Height="450" Width="800" WindowStyle="ThreeDBorderWindow">
 
         <DockPanel>
-                <Menu DockPanel.Dock="Top" FontSize="18">
-                        <MenuItem Header="_File">
+                <Menu  Padding="3" Background="White" DockPanel.Dock="Top" FontSize="18" HorizontalAlignment="Center ">
+                        <MenuItem Header="_File"  Foreground="#001011" Margin="5,0,40,0">
                                 
                         </MenuItem>
-                        <MenuItem Header="_Account">
-                                <MenuItem x:Name="LoginScreen" Header="_Login" Click="SignInButton_Click"/>
-                                <MenuItem x:Name="Logout" Header="_out" Click="SignOutButton_Click"/>
+                        <MenuItem Header="_Account" Foreground="#001011" Margin="0,0,5,0">
+                                <MenuItem x:Name="Logout" Header="_out" Foreground="#001011" Margin="5,0,40,0"  Click="SignOutButton_Click"/>
                         </MenuItem>
                 </Menu>
                 <Grid>
@@ -22,4 +21,5 @@
                         <ContentControl x:Name="ActiveItem" Margin="5" />
                 </Grid>
         </DockPanel>
+        
 </Window>

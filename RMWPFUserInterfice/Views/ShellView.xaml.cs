@@ -20,7 +20,6 @@ public partial class ShellView : Window
     
     private readonly ILoggedInUserModel _loggedInUserModel = new LoggedInUserModel();
     private IApiHelper _apiHelper;
-    private HttpClient _httpClient =  new HttpClient();
 
     public ShellView()
     {
@@ -47,50 +46,6 @@ public partial class ShellView : Window
         {
             //ResultText.Text = $"Error signing-out user: {ex.Message}";
         }
-    }
-    private async void SignInButton_Click(object sender, RoutedEventArgs e)
-    {
-        _apiHelper = new ApiHelper(_loggedInUserModel);
-        AuthenticationResult authResult = null;
-        var app = App.PublicClientApp;
-        try
-        {
-            //ResultText.Text = "";
-            authResult = await app.AcquireTokenInteractive(App.ApiScopes)
-                .WithParentActivityOrWindow(new WindowInteropHelper(this).Handle)
-                .ExecuteAsync();
-            
-            // capture more information about the user 
-            await _apiHelper.GetLoggedInUserInfo(authResult.UniqueId, authResult.AccessToken);
-
-        }
-        catch (MsalException ex)
-        {
-            try
-            {
-                if (ex.Message.Contains("AADB2C90118"))
-                {
-                    authResult = await app.AcquireTokenInteractive(App.ApiScopes)
-                        .WithParentActivityOrWindow(new WindowInteropHelper(this).Handle)
-                        .WithPrompt(Prompt.SelectAccount)
-                        .WithB2CAuthority(App.AuthorityResetPassword)
-                        .ExecuteAsync();
-                }
-                else
-                {
-                    //ResultText.Text = $"Error Acquiring Token:{Environment.NewLine}{ex}";
-                }
-            }
-            catch (Exception exe)
-            {
-                //ResultText.Text = $"Error Acquiring Token:{Environment.NewLine}{exe}";
-            }
-        }
-        catch (Exception ex)
-        {
-            //ResultText.Text = $"Error Acquiring Token:{Environment.NewLine}{ex}";
-        }
-        
     }
 
     #endregion

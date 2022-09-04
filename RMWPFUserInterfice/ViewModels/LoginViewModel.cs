@@ -1,8 +1,65 @@
-﻿using Caliburn.Micro;
+﻿using System;
+using System.Windows;
+using System.Windows.Interop;
+using Caliburn.Micro;
+using Microsoft.Identity.Client;
+using RMWPFUserInterface.Library.Helpers;
+using RMWPFUserInterface.Library.Models;
+using RMWPFUserInterfice.Views;
 
 namespace RMWPFUserInterfice.ViewModels;
 
 public class LoginViewModel : Screen
 {
-    
+    private readonly ILoggedInUserModel _loggedInUserModel;
+    private IApiHelper _apiHelper;
+
+    public LoginViewModel(IApiHelper apiHelper , ILoggedInUserModel loggedInUserModel)
+    {
+        _apiHelper = apiHelper;
+        _loggedInUserModel = loggedInUserModel;
+    }
+    public async void LogIn(object sender, RoutedEventArgs e)
+    {
+        _apiHelper = new ApiHelper(_loggedInUserModel);
+        AuthenticationResult authResult = null;
+        var app = App.PublicClientApp;
+        try
+        {
+            //ResultText.Text = "";
+            authResult = await app.AcquireTokenInteractive(App.ApiScopes)
+                .WithParentActivityOrWindow(new WindowInteropHelper(new ShellView()).Handle)
+                .ExecuteAsync();
+            
+            // capture more information about the user 
+            await _apiHelper.GetLoggedInUserInfo(authResult.UniqueId, authResult.AccessToken);
+        }
+        catch (MsalException ex)
+        {
+            try
+            {
+                if (ex.Message.Contains("AADB2C90118"))
+                {
+                    authResult = await app.AcquireTokenInteractive(App.ApiScopes)
+                        .WithParentActivityOrWindow(new WindowInteropHelper(new ShellView()).Handle)
+                        .WithPrompt(Prompt.SelectAccount)
+                        .WithB2CAuthority(App.AuthorityResetPassword)
+                        .ExecuteAsync();
+                }
+                else
+                {
+                    //ResultText.Text = $"Error Acquiring Token:{Environment.NewLine}{ex}";
+                }
+            }
+            catch (Exception exe)
+            {
+                //ResultText.Text = $"Error Acquiring Token:{Environment.NewLine}{exe}";
+            }
+        }
+        catch (Exception ex)
+        {
+            //ResultText.Text = $"Error Acquiring Token:{Environment.NewLine}{ex}";
+        }
+        
+    }
 }

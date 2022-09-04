@@ -19,6 +19,7 @@ public class Bootstrapper : BootstrapperBase
     }
     protected override void Configure()
     {
+
         _container.Instance(_container);
         _container
             .Singleton<IWindowManager, WindowManager>()
@@ -27,12 +28,14 @@ public class Bootstrapper : BootstrapperBase
             .Singleton<HttpClient>()
             .Singleton<IApiHelper, ApiHelper>();
         
+        
         GetType().Assembly.GetTypes()
             .Where(type => type.IsClass)
             .Where(type => type.Name.EndsWith("ViewModel"))
             .ToList()
             .ForEach(viewModelType => _container.RegisterPerRequest(
                 viewModelType,viewModelType.ToString(),viewModelType));
+
     }
 
     protected override void OnStartup(object sender, StartupEventArgs e)
