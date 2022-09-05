@@ -1,6 +1,8 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Data;
 using Caliburn.Micro;
 using RMWPFUserInterface.Library.Helpers;
 using RMWPFUserInterface.Library.Models;
@@ -12,11 +14,15 @@ public class SalesViewModel : Screen
     private readonly IProductEndPoint _productEndPoint;
     private readonly ILoggedInUserModel _loggerUser;
 
-    public SalesViewModel(IProductEndPoint productEndPoint , ILoggedInUserModel loggerUser)
+    public SalesViewModel(IProductEndPoint productEndPoint , ILoggedInUserModel loggerUser, 
+                            BindingList<ProductsModel> products, ProductsModel selectedProduct)
     {
         _productEndPoint = productEndPoint;
         _loggerUser = loggerUser;
+        _products = products;
+        _selectedProduct = selectedProduct;
     }
+
 
     protected override async  void OnViewLoaded(object view)
     {
@@ -30,6 +36,8 @@ public class SalesViewModel : Screen
         Products = new BindingList<ProductsModel>(productList);
     }
     
+    #region Binding List  Properties
+    
     private BindingList<ProductsModel> _products;
     public BindingList<ProductsModel> Products
     {
@@ -40,11 +48,22 @@ public class SalesViewModel : Screen
             NotifyOfPropertyChange(()=> Products);
         }
     }
+    //=======================================
+    private ProductsModel _selectedProduct;
+    public ProductsModel SelectedProduct
+    {
+        get => _selectedProduct;
+        set
+        {
+            _selectedProduct = value;
+            NotifyOfPropertyChange(()=> SelectedProduct);
+            NotifyOfPropertyChange(()=> CanAddToCart);
+        }
+    }
+    //=======================================
+    private BindingList<CartItemModel> _cart = new BindingList<CartItemModel>();
 
-    
-    private BindingList<ProductsModel> _cart;
-
-    public BindingList<ProductsModel> Cart
+    public BindingList<CartItemModel> Cart
     {
         get => _cart;
         set
@@ -54,11 +73,21 @@ public class SalesViewModel : Screen
         }
     }
 
+    #endregion
+
+    #region Binding Properties
+
     public string SubTotal
     {
         get
         {
-            return "$0.00";
+            decimal subTotal = 0;
+
+            foreach (var cartItemModel in Cart)
+            {
+                subTotal += (cartItemModel.Product.RetailPrice * cartItemModel.QuantityInCart);
+            }
+            return subTotal.ToString("C");
         }
     } 
     public string Tax
@@ -87,9 +116,8 @@ public class SalesViewModel : Screen
     
 
 
-    private string _itemQuantity;
-
-    public string ItemQuantity
+    private int _itemQuantity = 1;
+    public int ItemQuantity
     {
         get => _itemQuantity;
         set
@@ -97,9 +125,13 @@ public class SalesViewModel : Screen
             if (value == _itemQuantity) return;
             _itemQuantity = value;
             NotifyOfPropertyChange(()=> ItemQuantity);
+            NotifyOfPropertyChange(()=> CanAddToCart);
         }
     }
-    
+
+    #endregion
+
+    #region Funtions 
     public bool CanAddToCart
     {
         get
@@ -108,13 +140,38 @@ public class SalesViewModel : Screen
             
             //Make sure something is selected 
             //Make sure there is an item quantity
+            if (ItemQuantity > 0 && SelectedProduct?.QuantityInStock  >= ItemQuantity )
+            {
+                return true;
+            }
             return output;
         }
     }
 
     public void AddToCart()
     {
-        
+
+        CartItemModel existingItem = Cart.FirstOrDefault(x => x.Product == SelectedProduct);
+
+        if (existingItem != null)
+        {
+            existingItem.QuantityInCart += ItemQuantity;
+            Cart.Remove(existingItem);
+            Cart.Add(existingItem);
+        }
+        else
+        {
+            CartItemModel item = new CartItemModel()
+            {
+                Product = SelectedProduct,
+                QuantityInCart = ItemQuantity
+            };
+            Cart.Add(item);
+        }
+
+        SelectedProduct.QuantityInStock -= ItemQuantity;
+        ItemQuantity = 1;
+        NotifyOfPropertyChange(()=> SubTotal);
     }
 
     public bool CanRemoveFromCart
@@ -130,8 +187,10 @@ public class SalesViewModel : Screen
 
     public void RemoveFromCart()
     {
-        
+        NotifyOfPropertyChange(()=> SubTotal);
     }
     
+
+    #endregion
     
 }
