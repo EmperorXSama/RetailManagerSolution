@@ -131,6 +131,7 @@ public class SalesViewModel : Screen
     {
 
         CartItemModel existingItem = Cart.FirstOrDefault(x => x.Product == SelectedProduct);
+        
 
         if (existingItem != null)
         {
