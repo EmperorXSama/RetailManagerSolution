@@ -14,13 +14,12 @@ public class SalesViewModel : Screen
     private readonly IProductEndPoint _productEndPoint;
     private readonly ILoggedInUserModel _loggerUser;
 
-    public SalesViewModel(IProductEndPoint productEndPoint , ILoggedInUserModel loggerUser, 
-                            BindingList<ProductsModel> products, ProductsModel selectedProduct)
+    public SalesViewModel(IProductEndPoint productEndPoint , ILoggedInUserModel loggerUser, ProductsModel selectedProduct,IConfigHelper configHelper)
     {
         _productEndPoint = productEndPoint;
         _loggerUser = loggerUser;
-        _products = products;
         _selectedProduct = selectedProduct;
+        _configHelper = configHelper;
     }
 
 
@@ -50,6 +49,8 @@ public class SalesViewModel : Screen
     }
     //=======================================
     private ProductsModel _selectedProduct;
+    private readonly IConfigHelper _configHelper;
+
     public ProductsModel SelectedProduct
     {
         get => _selectedProduct;
@@ -77,33 +78,11 @@ public class SalesViewModel : Screen
 
     #region Binding Properties
 
-    public string SubTotal
-    {
-        get
-        {
-            decimal subTotal = 0;
+    public string SubTotal => CalculatingSubTotal().ToString("C");
+    public string Tax => CalculatingTaxAmount().ToString("C");
 
-            foreach (var cartItemModel in Cart)
-            {
-                subTotal += (cartItemModel.Product.RetailPrice * cartItemModel.QuantityInCart);
-            }
-            return subTotal.ToString("C");
-        }
-    } 
-    public string Tax
-    {
-        get
-        {
-            return "$0.00";
-        }
-    } 
-    public string Total
-    {
-        get
-        {
-            return "$0.00";
-        }
-    }
+    public string Total => (CalculatingSubTotal() + CalculatingTaxAmount()).ToString("C");
+
     public bool CanCheckOut
     {
         get
@@ -172,6 +151,8 @@ public class SalesViewModel : Screen
         SelectedProduct.QuantityInStock -= ItemQuantity;
         ItemQuantity = 1;
         NotifyOfPropertyChange(()=> SubTotal);
+        NotifyOfPropertyChange(()=> Tax);
+        NotifyOfPropertyChange(()=> Total);
     }
 
     public bool CanRemoveFromCart
@@ -188,9 +169,37 @@ public class SalesViewModel : Screen
     public void RemoveFromCart()
     {
         NotifyOfPropertyChange(()=> SubTotal);
+        NotifyOfPropertyChange(()=> Tax);
+        NotifyOfPropertyChange(()=> Total);
     }
-    
 
+    private decimal CalculatingTaxAmount()
+    {
+        decimal taxAmount = 0;
+        decimal taxRate = _configHelper.GetTaxRate()/100;
+
+        foreach (var cartItemModel in Cart)
+        {
+            if (cartItemModel.Product.IsTaxable)
+            {
+                taxAmount += (cartItemModel.Product.RetailPrice * cartItemModel.QuantityInCart * taxRate);
+            }
+        }
+
+        return taxAmount;
+    }
+
+    private decimal CalculatingSubTotal()
+    {
+        decimal subTotal = 0;
+
+        foreach (var cartItemModel in Cart)
+        {
+            subTotal += (cartItemModel.Product.RetailPrice * cartItemModel.QuantityInCart);
+        }
+
+        return subTotal;
+    }
     #endregion
     
 }

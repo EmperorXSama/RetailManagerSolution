@@ -26,6 +26,7 @@ public class Bootstrapper : BootstrapperBase
         _container
             .Singleton<IWindowManager, WindowManager>()
             .Singleton<IEventAggregator, EventAggregator>()
+            .Singleton<IConfigHelper ,ConfigHelper>()
             .Singleton<ILoggedInUserModel,LoggedInUserModel>()
             .Singleton<HttpClient>()
             .Singleton<IApiHelper, ApiHelper>();

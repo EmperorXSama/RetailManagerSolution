@@ -7,4 +7,5 @@ public interface IProductsModel
     string Description { get; set; }
     decimal RetailPrice { get; set; }
     int QuantityInStock { get; set; }
+    bool IsTaxable { get; set; }
 }
