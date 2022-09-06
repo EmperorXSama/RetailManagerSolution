@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Identity.Web;
 using Microsoft.OpenApi.Models;
 using RetailManagerDataManagemeent.Api.AuthPolicy;
+using RM.Library;
 using RM.Library.DataAccesss;
 using RM.Library.Internal.DataAccess;
 
@@ -41,6 +42,8 @@ public static class DependencyInjection
         builder.Services.AddSingleton<ISqlDataAccess, SqlDataAccess>();
         builder.Services.AddSingleton<IUserData, UserData>();
         builder.Services.AddSingleton<IProductData, ProductData>();
+        builder.Services.AddSingleton<ISaleData, SaleData>();
+        builder.Services.AddSingleton<IConfigHelper, ConfigHelper>();
     }
 
     public static void AddSwaggerServices(this WebApplicationBuilder builder)

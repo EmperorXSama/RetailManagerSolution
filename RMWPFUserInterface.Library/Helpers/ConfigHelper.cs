@@ -6,6 +6,8 @@ namespace RMWPFUserInterface.Library.Helpers;
 
 public class ConfigHelper : IConfigHelper
 {
+    // Todo : Move this from app sitting to the Api 
+    
     public decimal GetTaxRate()
     {
         string? rateText = ConfigurationManager.AppSettings["taxRate"];

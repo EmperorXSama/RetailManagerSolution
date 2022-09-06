@@ -14,12 +14,14 @@ public class SalesViewModel : Screen
     private readonly IProductEndPoint _productEndPoint;
     private readonly ILoggedInUserModel _loggerUser;
 
-    public SalesViewModel(IProductEndPoint productEndPoint , ILoggedInUserModel loggerUser, ProductsModel selectedProduct,IConfigHelper configHelper)
+    public SalesViewModel(IProductEndPoint productEndPoint , ILoggedInUserModel loggerUser, ProductsModel selectedProduct,
+        IConfigHelper configHelper,ISaleEndPoint saleEndPoint)
     {
         _productEndPoint = productEndPoint;
         _loggerUser = loggerUser;
         _selectedProduct = selectedProduct;
         _configHelper = configHelper;
+        _saleEndPoint = saleEndPoint;
     }
 
 
@@ -50,6 +52,7 @@ public class SalesViewModel : Screen
     //=======================================
     private ProductsModel _selectedProduct;
     private readonly IConfigHelper _configHelper;
+    private readonly ISaleEndPoint _saleEndPoint;
 
     public ProductsModel SelectedProduct
     {
@@ -58,7 +61,7 @@ public class SalesViewModel : Screen
         {
             _selectedProduct = value;
             NotifyOfPropertyChange(()=> SelectedProduct);
-            NotifyOfPropertyChange(()=> CanAddToCart);
+            NotifyOfPropertyChange(()=> CanAddToCarts);
         }
     }
     //=======================================
@@ -87,13 +90,27 @@ public class SalesViewModel : Screen
     {
         get
         {
-            bool output = false;
-            //Make sure there is something in the cart 
+            bool output = Cart.Count > 0;
             return output;
         }
     }
-    
 
+    public async Task CheckOut()
+    {
+        // create sale model and post it to the api
+        SalesModel sale = new SalesModel();
+        sale.UserModel = _loggerUser.Id;
+        foreach (var itemModel in Cart)
+        {
+            sale.SaleDetails.Add(new SaleDetailsModel
+            {
+                ProductId = itemModel.Product.Id,
+                Quantity = itemModel.QuantityInCart
+            });
+        }
+
+        await _saleEndPoint.PostSale(sale , _loggerUser.Token);
+    }
 
     private int _itemQuantity = 1;
     public int ItemQuantity
@@ -104,14 +121,14 @@ public class SalesViewModel : Screen
             if (value == _itemQuantity) return;
             _itemQuantity = value;
             NotifyOfPropertyChange(()=> ItemQuantity);
-            NotifyOfPropertyChange(()=> CanAddToCart);
+            NotifyOfPropertyChange(()=> CanAddToCarts);
         }
     }
 
     #endregion
 
     #region Funtions 
-    public bool CanAddToCart
+    public bool CanAddToCarts
     {
         get
         {
@@ -154,6 +171,7 @@ public class SalesViewModel : Screen
         NotifyOfPropertyChange(()=> SubTotal);
         NotifyOfPropertyChange(()=> Tax);
         NotifyOfPropertyChange(()=> Total);
+        NotifyOfPropertyChange(()=> CanCheckOut);
     }
 
     public bool CanRemoveFromCart
@@ -172,6 +190,7 @@ public class SalesViewModel : Screen
         NotifyOfPropertyChange(()=> SubTotal);
         NotifyOfPropertyChange(()=> Tax);
         NotifyOfPropertyChange(()=> Total);
+        NotifyOfPropertyChange(()=> CanCheckOut);
     }
 
     private decimal CalculatingTaxAmount()

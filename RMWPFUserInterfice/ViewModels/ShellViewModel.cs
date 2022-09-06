@@ -7,18 +7,15 @@ public sealed class ShellViewModel : Conductor<object> , IHandle<LogOnEventModel
 {
     private readonly IEventAggregator _eventHandler;
     private readonly SalesViewModel _salesVm;
-    private readonly SimpleContainer _container;
 
-    public ShellViewModel(IEventAggregator eventHandler , SalesViewModel salesVm, 
-        SimpleContainer container)
+    public ShellViewModel(IEventAggregator eventHandler , SalesViewModel salesVm)
     {
         _eventHandler = eventHandler;
         _salesVm = salesVm;
-        _container = container;
-        
+
         _eventHandler.Subscribe(this);
         
-        ActivateItem(_container.GetInstance<LoginViewModel>());
+        ActivateItem(IoC.Get<LoginViewModel>());
     }
 
     public void Handle(LogOnEventModel message)

@@ -19,7 +19,7 @@ public class UserData : IUserData
     {
 
         var p = new { Id = id };
-        var output = _db.LoadData<UserModel, dynamic>("dbo.spUserLookUp", p, StringConstants.SqlConnectionName).FirstOrDefault();
+        var output = _db.LoadData<UserModel, dynamic>("[dbo].spUser_LookUp", p, StringConstants.SqlConnectionName).FirstOrDefault();
 
         return output;
 
@@ -37,7 +37,7 @@ public class UserData : IUserData
             EmailAddress = user.EmailAddress
         };
 
-       var result =  await _db.SaveData("dbo.spUser_Insert", person, StringConstants.SqlConnectionName);
+       var result =  await _db.SaveData("[dbo].spUser_Insert", person, StringConstants.SqlConnectionName);
        return result;
     }
     

@@ -16,9 +16,17 @@ public class ProductData : IProductData
     // get all the products from our sql database 
     public List<ProductModel> GetAllProducts()
     {
-        var output = _db.LoadData<ProductModel,dynamic>("dbo.spProduct_GetAll", new { }, StringConstants.SqlConnectionName);
+        var output = _db.LoadData<ProductModel,dynamic>("[dbo].spProduct_GetAll", new { }, StringConstants.SqlConnectionName);
 
         return output;
     }
-     
+    
+    // get product by Id 
+    public ProductModel GetProductById(int productId)
+    {
+        var output = _db.LoadData<ProductModel, dynamic>("[dbo].spProduct_GetById", new { Id = productId },
+            StringConstants.SqlConnectionName).FirstOrDefault();
+
+        return output;
+    }
 }

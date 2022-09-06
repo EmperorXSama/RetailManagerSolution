@@ -5,4 +5,5 @@ namespace RM.Library.DataAccesss;
 public interface IProductData
 {
     List<ProductModel> GetAllProducts();
+    ProductModel GetProductById(int productId);
 }
