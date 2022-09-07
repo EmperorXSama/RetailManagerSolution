@@ -1,11 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Data;
+using AutoMapper;
 using Caliburn.Micro;
 using RMWPFUserInterface.Library.Helpers;
 using RMWPFUserInterface.Library.Models;
+using RMWPFUserInterfice.Models;
 
 namespace RMWPFUserInterfice.ViewModels;
 
@@ -14,14 +17,15 @@ public class SalesViewModel : Screen
     private readonly IProductEndPoint _productEndPoint;
     private readonly ILoggedInUserModel _loggerUser;
 
-    public SalesViewModel(IProductEndPoint productEndPoint , ILoggedInUserModel loggerUser, ProductsModel selectedProduct,
-        IConfigHelper configHelper,ISaleEndPoint saleEndPoint)
+    public SalesViewModel(IProductEndPoint productEndPoint , ILoggedInUserModel loggerUser, ProductDisplayModel selectedProduct,
+        IConfigHelper configHelper,ISaleEndPoint saleEndPoint , IMapper mapper)
     {
         _productEndPoint = productEndPoint;
         _loggerUser = loggerUser;
         _selectedProduct = selectedProduct;
         _configHelper = configHelper;
         _saleEndPoint = saleEndPoint;
+        _mapper = mapper;
     }
 
 
@@ -34,13 +38,15 @@ public class SalesViewModel : Screen
     private async Task LoadData()
     {
         var productList = await _productEndPoint.GetAllProducts(_loggerUser.Token);
-        Products = new BindingList<ProductsModel>(productList);
+        // map 
+        var products = _mapper.Map<List<ProductDisplayModel>>(productList);
+        Products = new BindingList<ProductDisplayModel>(products);
     }
     
     #region Binding List  Properties
     
-    private BindingList<ProductsModel> _products;
-    public BindingList<ProductsModel> Products
+    private BindingList<ProductDisplayModel> _products;
+    public BindingList<ProductDisplayModel> Products
     {
         get => _products;
         set
@@ -50,11 +56,12 @@ public class SalesViewModel : Screen
         }
     }
     //=======================================
-    private ProductsModel _selectedProduct;
+    private ProductDisplayModel _selectedProduct;
     private readonly IConfigHelper _configHelper;
     private readonly ISaleEndPoint _saleEndPoint;
+    private readonly IMapper _mapper;
 
-    public ProductsModel SelectedProduct
+    public ProductDisplayModel SelectedProduct
     {
         get => _selectedProduct;
         set
@@ -65,9 +72,9 @@ public class SalesViewModel : Screen
         }
     }
     //=======================================
-    private BindingList<CartItemModel> _cart = new BindingList<CartItemModel>();
+    private BindingList<CartItemDisplayModel> _cart = new BindingList<CartItemDisplayModel>();
 
-    public BindingList<CartItemModel> Cart
+    public BindingList<CartItemDisplayModel> Cart
     {
         get => _cart;
         set
@@ -147,18 +154,16 @@ public class SalesViewModel : Screen
     public void AddToCart()
     {
 
-        CartItemModel existingItem = Cart.FirstOrDefault(x => x.Product == SelectedProduct);
+        CartItemDisplayModel existingItem = Cart.FirstOrDefault(x => x.Product == SelectedProduct);
         
 
         if (existingItem != null)
         {
             existingItem.QuantityInCart += ItemQuantity;
-            Cart.Remove(existingItem);
-            Cart.Add(existingItem);
         }
         else
         {
-            CartItemModel item = new CartItemModel()
+            CartItemDisplayModel item = new CartItemDisplayModel()
             {
                 Product = SelectedProduct,
                 QuantityInCart = ItemQuantity
@@ -198,11 +203,11 @@ public class SalesViewModel : Screen
         decimal taxAmount = 0;
         decimal taxRate = _configHelper.GetTaxRate()/100;
 
-        foreach (var cartItemModel in Cart)
+        foreach (var CartItemDisplayModel in Cart)
         {
-            if (cartItemModel.Product.IsTaxable)
+            if (CartItemDisplayModel.Product.IsTaxable)
             {
-                taxAmount += (cartItemModel.Product.RetailPrice * cartItemModel.QuantityInCart * taxRate);
+                taxAmount += (CartItemDisplayModel.Product.RetailPrice * CartItemDisplayModel.QuantityInCart * taxRate);
             }
         }
 
@@ -213,9 +218,9 @@ public class SalesViewModel : Screen
     {
         decimal subTotal = 0;
 
-        foreach (var cartItemModel in Cart)
+        foreach (var CartItemDisplayModel in Cart)
         {
-            subTotal += (cartItemModel.Product.RetailPrice * cartItemModel.QuantityInCart);
+            subTotal += (CartItemDisplayModel.Product.RetailPrice * CartItemDisplayModel.QuantityInCart);
         }
 
         return subTotal;
