@@ -10,10 +10,11 @@
         <DockPanel>
                 <Menu  Padding="3" Background="White" DockPanel.Dock="Top" FontSize="18" HorizontalAlignment="Center ">
                         <MenuItem Header="_File"  Foreground="#001011" Margin="5,0,40,0">
-                                
+                                <MenuItem x:Name="ExitApplication" Header="E_xit"/>
                         </MenuItem>
-                        <MenuItem Header="_Account" Foreground="#001011" Margin="0,0,5,0">
-                                <MenuItem x:Name="Logout" Header="_out" Foreground="#001011" Margin="5,0,40,0"  Click="SignOutButton_Click"/>
+                        <MenuItem Header="_Account" Foreground="#001011" Margin="0,0,5,0" Visibility="{Binding IsAccountVisible,Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed }">
+                                <MenuItem x:Name="Logout" Header="Log_out" Foreground="#001011" Margin="5,0,40,0" 
+                                          />
                         </MenuItem>
                 </Menu>
                 <Grid>

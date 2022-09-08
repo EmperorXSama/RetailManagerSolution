@@ -27,28 +27,6 @@ public partial class ShellView : Window
     }
     
 
-    #region Configure login , logout , calling api methods 
-
-    private async void SignOutButton_Click(object sender, RoutedEventArgs e)
-    {
-        // SingOut will remove tokens from the token cache from ALL accounts, irrespective of user flow
-        IEnumerable<IAccount> accounts = await App.PublicClientApp.GetAccountsAsync();
-        try
-        {
-            while (accounts.Any())
-            {
-                await App.PublicClientApp.RemoveAsync(accounts.FirstOrDefault());
-                accounts = await App.PublicClientApp.GetAccountsAsync();
-            }
-            
-        }
-        catch (MsalException ex)
-        {
-            //ResultText.Text = $"Error signing-out user: {ex.Message}";
-        }
-    }
-
-    #endregion
 
     
 }

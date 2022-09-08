@@ -56,10 +56,11 @@ public class SalesViewModel : Screen
         }
     }
     //=======================================
-    private ProductDisplayModel _selectedProduct;
     private readonly IConfigHelper _configHelper;
     private readonly ISaleEndPoint _saleEndPoint;
     private readonly IMapper _mapper;
+
+    private ProductDisplayModel _selectedProduct;
 
     public ProductDisplayModel SelectedProduct
     {
@@ -69,6 +70,20 @@ public class SalesViewModel : Screen
             _selectedProduct = value;
             NotifyOfPropertyChange(()=> SelectedProduct);
             NotifyOfPropertyChange(()=> CanAddToCarts);
+        }
+    }
+
+    
+    private CartItemDisplayModel _selectedCartItem;
+
+    public CartItemDisplayModel SelectedCartItem
+    {
+        get => _selectedCartItem;
+        set
+        {
+            _selectedCartItem = value;
+            NotifyOfPropertyChange(()=> SelectedCartItem);
+            NotifyOfPropertyChange(()=> CanRemoveFromCart);
         }
     }
     //=======================================
@@ -117,6 +132,7 @@ public class SalesViewModel : Screen
         }
 
         await _saleEndPoint.PostSale(sale , _loggerUser.Token);
+        await ResetSalesViewModel();
     }
 
     private int _itemQuantity = 1;
@@ -185,17 +201,33 @@ public class SalesViewModel : Screen
         {
             bool output = false;
 
-            // Make sure there is something selected 
+            if (SelectedCartItem != null && SelectedCartItem?.QuantityInCart >0)
+            {
+                // Make sure there is something selected 
+                return true;
+            }
             return output;
         }
     }
 
     public void RemoveFromCart()
     {
+       
+        SelectedCartItem.Product.QuantityInStock += 1;
+        if (SelectedCartItem.QuantityInCart >1 )
+        {
+            SelectedCartItem.QuantityInCart -= 1;
+        }
+        else
+        {
+            Cart.Remove(SelectedCartItem);
+        }
+        
         NotifyOfPropertyChange(()=> SubTotal);
         NotifyOfPropertyChange(()=> Tax);
         NotifyOfPropertyChange(()=> Total);
         NotifyOfPropertyChange(()=> CanCheckOut);
+        NotifyOfPropertyChange(()=> CanAddToCarts);
     }
 
     private decimal CalculatingTaxAmount()
@@ -224,6 +256,18 @@ public class SalesViewModel : Screen
         }
 
         return subTotal;
+    }
+
+    private async Task  ResetSalesViewModel()
+    {
+        Cart = new BindingList<CartItemDisplayModel>();
+        
+        await LoadData();
+        
+        NotifyOfPropertyChange(()=> SubTotal);
+        NotifyOfPropertyChange(()=> Tax);
+        NotifyOfPropertyChange(()=> Total);
+        NotifyOfPropertyChange(()=> CanCheckOut);
     }
     #endregion
     

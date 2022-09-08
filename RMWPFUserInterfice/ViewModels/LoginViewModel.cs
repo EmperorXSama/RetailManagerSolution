@@ -18,15 +18,20 @@ public class LoginViewModel : Screen
 
     public LoginViewModel(IApiHelper apiHelper , ILoggedInUserModel loggedInUserModel , IEventAggregator eventHandler)
     {
+
         _apiHelper = apiHelper;
         _loggedInUserModel = loggedInUserModel;
         _eventHandler = eventHandler;
+
     }
     public async void LogIn(object sender, RoutedEventArgs e)
     {
         _apiHelper = new ApiHelper(_loggedInUserModel);
         AuthenticationResult authResult = null;
+
         var app = App.PublicClientApp;
+        
+
         try
         {
             //ResultText.Text = "";
@@ -39,7 +44,7 @@ public class LoginViewModel : Screen
             await _apiHelper.GetLoggedInUserInfo(authResult.UniqueId, authResult.AccessToken);
             
             // creating the event handler for the after logged in success 
-            _eventHandler.PublishOnUIThread(new LogOnEventModel());
+            await _eventHandler.PublishOnUIThreadAsync(new LogOnEventModel());
         }
         catch (MsalException ex)
         {

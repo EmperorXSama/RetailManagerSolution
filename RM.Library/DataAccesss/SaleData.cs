@@ -72,24 +72,38 @@ public class SaleData : ISaleData
 
 
         #endregion
-        
-        // creating the sale info record 
-        var saleId = await  _db.SaveData("spSale_Insert", dynamicParameter, StringConstants.SqlConnectionName);
-        sale.Id = dynamicParameter.Get<int>("Id");
 
-        // creating the sale Detail info record 
-        foreach (var item in details)
+        using (_db)
         {
-            item.SaleId = sale.Id;
-            await _db.SaveData("spSaleDetail_Insert", new
+            try
             {
-                SaleId = item.SaleId,
-                ProductId = item.ProductId,
-                PurchasedPrice = item.PurchasedPrice,
-                Quantity = item.Quantity,
-                Tax = item.Tax
-            }, StringConstants.SqlConnectionName);
+                _db.StartTransaction(StringConstants.SqlConnectionName);
+                // creating the sale info record 
+                var saleId = await  _db.SaveDataInTransaction("spSale_Insert", dynamicParameter);
+                sale.Id = dynamicParameter.Get<int>("Id");
+
+                // creating the sale Detail info record 
+                foreach (var item in details)
+                {
+                    item.SaleId = sale.Id;
+                    await _db.SaveDataInTransaction("spSaleDetail_Insert", new
+                    {
+                        SaleId = item.SaleId,
+                        ProductId = item.ProductId,
+                        PurchasedPrice = item.PurchasedPrice,
+                        Quantity = item.Quantity,
+                        Tax = item.Tax
+                    });
+                }
+                _db.CommitTransaction();
+            }
+            catch (Exception e)
+            {
+                _db.RollBack();
+                throw;
+            }
         }
+
         
         
     }

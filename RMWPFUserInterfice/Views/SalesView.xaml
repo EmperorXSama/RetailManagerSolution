@@ -65,7 +65,7 @@
         <!--Column 2-->
         <TextBlock Grid.Column="2" Grid.Row="1" Text="Cart" /> 
         <ListBox  MinHeight="100" MinWidth="150" Grid.Row="2" Grid.Column="2" 
-                 x:Name="Cart">
+                 x:Name="Cart" SelectedItem="{Binding SelectedCartItem}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <TextBlock  Text="{Binding Path =DisplayText ,Mode=OneWay}"/>
