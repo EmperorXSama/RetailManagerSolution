@@ -1,4 +1,4 @@
-﻿create procedure [dbo].[spUserLookUp]
+﻿CREATE procedure spUser_LookUp
       @Id nvarchar(128)
 as
     begin

@@ -1,6 +1,8 @@
 create table SaleDetails
 (
-    Id             int identity,
+    Id             int identity
+        constraint SaleDetails_pk
+            primary key,
     SaleId         int           not null
         constraint SaleDetails_Sale_Id_fk
             references Sale,
@@ -9,8 +11,7 @@ create table SaleDetails
             references Product,
     PurchasedPrice money         not null,
     Quantity       int default 1 not null,
-    Tax            int default 0 not null,
-    column_7       int
+    Tax            money         not null
 )
 go
 

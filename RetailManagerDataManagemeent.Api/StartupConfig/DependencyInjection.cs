@@ -42,7 +42,9 @@ public static class DependencyInjection
         builder.Services.AddSingleton<ISqlDataAccess, SqlDataAccess>();
         builder.Services.AddSingleton<IUserData, UserData>();
         builder.Services.AddSingleton<IProductData, ProductData>();
+        builder.Services.AddSingleton<IInventoryData, InventoryData>();
         builder.Services.AddSingleton<ISaleData, SaleData>();
+        builder.Services.AddSingleton<IConfigHelper, ConfigHelper>();
         builder.Services.AddSingleton<IConfigHelper, ConfigHelper>();
     }
 

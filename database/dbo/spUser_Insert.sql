@@ -1,4 +1,4 @@
-﻿create procedure [dbo].[spUser.Insert]
+﻿CREATE procedure spUser_Insert
         @Id varchar(128),
         @FirstName nvarchar(50),
         @LastName nvarchar(50),

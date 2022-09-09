@@ -107,6 +107,14 @@ public class SaleData : ISaleData
         
         
     }
+
+    public List<SaleReportModel> GetSaleReport()
+    {
+        var output =
+            _db.LoadData<SaleReportModel, dynamic>("spSale_SaleReport", new { }, StringConstants.SqlConnectionName);
+
+        return output;
+    }
 }
 
 

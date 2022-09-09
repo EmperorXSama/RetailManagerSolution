@@ -8,7 +8,6 @@ namespace RetailManagerDataManagemeent.Api.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-[Authorize]
 public class SaleController : Controller
 {
     private readonly ISaleData _saleData;
@@ -23,6 +22,13 @@ public class SaleController : Controller
     public async Task  Post(SalesModel sale)
     {
         await _saleData.SaveSale(sale);
+    }
+
+    [HttpGet]
+    [Route("GetSalesReport")]
+    public List<SaleReportModel> GetSaleReport()
+    {
+        return _saleData.GetSaleReport();
     }
 
 }
