@@ -8,6 +8,19 @@ builder.AddAuthenticationServices();
 builder.AddCostumeServices();
 builder.AddSwaggerServices();
 
+// add authorization policy 
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("Admin" , option =>
+    {
+        option.RequireClaim("jobTitle", "Admin");
+    });
+    options.AddPolicy("Cashier" , option =>
+    {
+        option.RequireClaim("jobTitle", "Cashier");
+    });
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

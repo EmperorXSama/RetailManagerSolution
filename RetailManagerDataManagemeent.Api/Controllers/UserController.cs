@@ -29,25 +29,7 @@ public class UserController : Controller
         var output = _userData.GetUserById(id);
         return output;
     }
-    
-    //get a user from the data base 
-    [HttpPost("CreateUser/{authenticatedUser}")]
-    public async Task<bool>  CreateNewUser(JObject authenticatedUser)
-    {
-        UserModel newUser = new UserModel();
-        // create the user 
-        newUser.Id = authenticatedUser["oid"].ToString();
-        newUser.FirstName = authenticatedUser["given_name"].ToString();
-        newUser.LastName = authenticatedUser["family_name"].ToString();
-        if (authenticatedUser["emails"] is JArray emails)
-        {
-            newUser.EmailAddress = emails[0].ToString();
-        }
-        
-      var result = await _userData.CreateUser(newUser);
-
-      return result != 0;
-    }
+   
         
         
     
