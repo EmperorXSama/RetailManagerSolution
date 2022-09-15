@@ -9,7 +9,7 @@ namespace RetailManagerDataManagemeent.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize]
+[Authorize(Policy = "Cashier")]
 [RequiredScope("data.view")]
 public class ProductsController : Controller
 {

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Interop;
 using Caliburn.Micro;
@@ -24,7 +26,7 @@ public class LoginViewModel : Screen
         _eventHandler = eventHandler;
 
     }
-    public async void LogIn(object sender, RoutedEventArgs e)
+    public async Task LogIn(object sender, RoutedEventArgs e)
     {
         _apiHelper = new ApiHelper(_loggedInUserModel);
         AuthenticationResult authResult = null;
@@ -44,7 +46,7 @@ public class LoginViewModel : Screen
             await _apiHelper.GetLoggedInUserInfo(authResult.UniqueId, authResult.AccessToken);
             
             // creating the event handler for the after logged in success 
-            await _eventHandler.PublishOnUIThreadAsync(new LogOnEventModel());
+            await _eventHandler.PublishOnUIThreadAsync(new LogOnEventModel() , new CancellationToken());
         }
         catch (MsalException ex)
         {

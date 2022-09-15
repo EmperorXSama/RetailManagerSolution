@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using Caliburn.Micro;
 using Microsoft.Identity.Client;
@@ -11,29 +13,21 @@ namespace RMWPFUserInterfice.ViewModels;
 public sealed class ShellViewModel : Conductor<object> , IHandle<LogOnEventModel>
 {
     private readonly IEventAggregator _eventHandler;
-    private readonly SalesViewModel _salesVm;
     private readonly ILoggedInUserModel _loggedInUser;
 
-    public ShellViewModel(IEventAggregator eventHandler , SalesViewModel salesVm , ILoggedInUserModel loggedInUser)
+    public ShellViewModel(IEventAggregator eventHandler , ILoggedInUserModel loggedInUser)
     {
         _eventHandler = eventHandler;
-        _salesVm = salesVm;
         _loggedInUser = loggedInUser;
 
-        _eventHandler.Subscribe(this);
+        _eventHandler.SubscribeOnPublishedThread(this);
         
-        ActivateItem(IoC.Get<LoginViewModel>());
-    }
-
-    public void Handle(LogOnEventModel message)
-    {
-        ActivateItem(_salesVm);
-        NotifyOfPropertyChange(() => IsAccountVisible);
+        ActivateItemAsync(IoC.Get<LoginViewModel>(), new CancellationToken());
     }
 
     public void ExitApplication()
     {
-        TryClose();
+        TryCloseAsync();
     }
 
     public bool IsAccountVisible
@@ -65,7 +59,13 @@ public sealed class ShellViewModel : Conductor<object> , IHandle<LogOnEventModel
         }
         
         _loggedInUser.ResetUserWhenLogout();
-        ActivateItem(IoC.Get<LoginViewModel>());
+        await ActivateItemAsync(IoC.Get<LoginViewModel>() , new CancellationToken());
+        NotifyOfPropertyChange(() => IsAccountVisible);
+    }
+
+    public async  Task HandleAsync(LogOnEventModel message, CancellationToken cancellationToken)
+    {
+        await ActivateItemAsync(IoC.Get<SalesViewModel>(), cancellationToken);
         NotifyOfPropertyChange(() => IsAccountVisible);
     }
 }

@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Dynamic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Data;
 using AutoMapper;
 using Caliburn.Micro;
@@ -18,7 +20,7 @@ public class SalesViewModel : Screen
     private readonly ILoggedInUserModel _loggerUser;
 
     public SalesViewModel(IProductEndPoint productEndPoint , ILoggedInUserModel loggerUser, ProductDisplayModel selectedProduct,
-        IConfigHelper configHelper,ISaleEndPoint saleEndPoint , IMapper mapper)
+        IConfigHelper configHelper,ISaleEndPoint saleEndPoint , IMapper mapper , StatusInfoViewModel status , IWindowManager windowManager)
     {
         _productEndPoint = productEndPoint;
         _loggerUser = loggerUser;
@@ -26,13 +28,39 @@ public class SalesViewModel : Screen
         _configHelper = configHelper;
         _saleEndPoint = saleEndPoint;
         _mapper = mapper;
+        _status = status;
+        _windowManager = windowManager;
     }
 
 
     protected override async  void OnViewLoaded(object view)
     {
         base.OnViewLoaded(view);
-        await LoadData();
+        try
+        {
+            await LoadData();
+        }
+        catch (Exception e)
+        {
+            dynamic sittings = new ExpandoObject();
+            sittings.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            sittings.Title = "System Error";
+            sittings.ResizeMode = ResizeMode.NoResize;
+            // catch the error 
+            if (e.Message == "Forbidden")
+            {
+                _status.UpdateMessage("Unauthorized Access", "you don't have permission to interact with the sales window .");
+                await _windowManager.ShowDialogAsync(_status,null,sittings);
+            }
+            else
+            {
+                _status.UpdateMessage("Fatal Error", e.Message);
+                await _windowManager.ShowDialogAsync(_status,null,sittings);
+            }
+           
+            await TryCloseAsync();
+        }
+        
     }
 
     private async Task LoadData()
@@ -59,6 +87,8 @@ public class SalesViewModel : Screen
     private readonly IConfigHelper _configHelper;
     private readonly ISaleEndPoint _saleEndPoint;
     private readonly IMapper _mapper;
+    private readonly StatusInfoViewModel _status;
+    private readonly IWindowManager _windowManager;
 
     private ProductDisplayModel _selectedProduct;
 
@@ -141,7 +171,6 @@ public class SalesViewModel : Screen
         get => _itemQuantity;
         set
         {
-            if (value == _itemQuantity) return;
             _itemQuantity = value;
             NotifyOfPropertyChange(()=> ItemQuantity);
             NotifyOfPropertyChange(()=> CanAddToCart);
@@ -159,7 +188,7 @@ public class SalesViewModel : Screen
             
             //Make sure something is selected 
             //Make sure there is an item quantity
-            if (ItemQuantity > 0 && SelectedProduct?.QuantityInStock  >= ItemQuantity )
+            if (ItemQuantity > 0 && SelectedProduct?.QuantityInStock  >= ItemQuantity)
             {
                 return true;
             }

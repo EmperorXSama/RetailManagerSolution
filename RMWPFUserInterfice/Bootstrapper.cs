@@ -57,9 +57,9 @@ public class Bootstrapper : BootstrapperBase
 
     }
 
-    protected override void OnStartup(object sender, StartupEventArgs e)
+    protected override async  void OnStartup(object sender, StartupEventArgs e)
     {
-        DisplayRootViewFor<ShellViewModel>();
+        await  DisplayRootViewForAsync<ShellViewModel>();
     }
 
     protected override object GetInstance(Type service, string key)
