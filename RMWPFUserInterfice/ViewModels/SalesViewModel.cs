@@ -69,7 +69,7 @@ public class SalesViewModel : Screen
         {
             _selectedProduct = value;
             NotifyOfPropertyChange(()=> SelectedProduct);
-            NotifyOfPropertyChange(()=> CanAddToCarts);
+            NotifyOfPropertyChange(()=> CanAddToCart);
         }
     }
 
@@ -144,14 +144,14 @@ public class SalesViewModel : Screen
             if (value == _itemQuantity) return;
             _itemQuantity = value;
             NotifyOfPropertyChange(()=> ItemQuantity);
-            NotifyOfPropertyChange(()=> CanAddToCarts);
+            NotifyOfPropertyChange(()=> CanAddToCart);
         }
     }
 
     #endregion
 
     #region Funtions 
-    public bool CanAddToCarts
+    public bool CanAddToCart
     {
         get
         {
@@ -227,7 +227,7 @@ public class SalesViewModel : Screen
         NotifyOfPropertyChange(()=> Tax);
         NotifyOfPropertyChange(()=> Total);
         NotifyOfPropertyChange(()=> CanCheckOut);
-        NotifyOfPropertyChange(()=> CanAddToCarts);
+        NotifyOfPropertyChange(()=> CanAddToCart);
     }
 
     private decimal CalculatingTaxAmount()

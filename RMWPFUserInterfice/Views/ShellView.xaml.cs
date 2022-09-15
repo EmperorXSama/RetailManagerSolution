@@ -18,8 +18,6 @@ namespace RMWPFUserInterfice.Views;
 public partial class ShellView : Window
 {
     
-    private readonly ILoggedInUserModel _loggedInUserModel = new LoggedInUserModel();
-    private IApiHelper _apiHelper;
 
     public ShellView()
     {
