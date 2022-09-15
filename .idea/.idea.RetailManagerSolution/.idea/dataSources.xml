@@ -8,5 +8,13 @@
       <jdbc-url>Server=localhost\DESKTOP-5UF5OD3,1433;Database=RMData</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+    <data-source source="LOCAL" name="Azure SQL Database Server - valravnretailmanager" uuid="21cc5f91-79df-4b1c-92b8-9efa4a0d8287">
+      <driver-ref>azure.ms</driver-ref>
+      <synchronize>true</synchronize>
+      <imported>true</imported>
+      <jdbc-driver>com.microsoft.sqlserver.jdbc.SQLServerDriver</jdbc-driver>
+      <jdbc-url>jdbc:sqlserver://valravnretailmanager.database.windows.net:1433;database=RetailData</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>
