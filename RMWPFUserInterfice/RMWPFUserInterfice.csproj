@@ -27,7 +27,6 @@
     <ItemGroup>
       <None Update="appsittings.json">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-          <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       </None>
       <None Update="appsittings.Development.json">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

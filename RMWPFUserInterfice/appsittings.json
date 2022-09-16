@@ -1,4 +1,4 @@
 ﻿{
-  "api": "#{api}#",
+  "api": "https://localhost:7145/",
   "TaxRate": 8.75
 }
