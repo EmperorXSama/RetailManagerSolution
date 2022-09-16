@@ -1,5 +1,6 @@
 
 
+using Microsoft.OpenApi.Models;
 using RetailManagerDataManagemeent.Api.StartupConfig;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,6 +8,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.AddAuthenticationServices();
 builder.AddCostumeServices();
 builder.AddSwaggerServices();
+
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Retail Manager Api", Version = "v1" });
+});
 
 // add authorization policy 
 builder.Services.AddAuthorization(options =>
@@ -23,14 +29,14 @@ builder.Services.AddAuthorization(options =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+
 app.UseSwagger();
-app.UseSwaggerUI();
+// Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
+// specifying the Swagger JSON endpoint.
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+});
 app.UseHttpsRedirection();
 app.UseRouting();
 
