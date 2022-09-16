@@ -5,14 +5,20 @@ using RetailManagerDataManagemeent.Api.StartupConfig;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(MyAllowSpecificOrigins,
+        policy =>
+        {
+            policy.AllowAnyOrigin()
+                .AllowAnyHeader()
+                .AllowAnyMethod();
+        });
+});
 builder.AddAuthenticationServices();
 builder.AddCostumeServices();
 builder.AddSwaggerServices();
-
-builder.Services.AddSwaggerGen(c =>
-{
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Retail Manager Api", Version = "v1" });
-});
 
 // add authorization policy 
 builder.Services.AddAuthorization(options =>
@@ -39,7 +45,7 @@ app.UseSwaggerUI(c =>
 });
 app.UseHttpsRedirection();
 app.UseRouting();
-
+app.UseCors(MyAllowSpecificOrigins);
 
 app.UseAuthentication();
 app.UseAuthorization();
