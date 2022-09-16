@@ -9,8 +9,8 @@ using RM.Library.Models;
 
 namespace RetailManagerDataManagemeent.Api.Controllers;
 [Route("api/[controller]")]
-[RequiredScope("data.view")]
 [ApiController]
+[RequiredScope("data.view")]
 [Authorize]
 public class UserController : Controller
 {
