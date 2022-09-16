@@ -22,4 +22,16 @@
       <ProjectReference Include="..\RMWPFUserInterface.Library\RMWPFUserInterface.Library.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Update="appsittings.json">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="appsittings.Development.json">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="appsittings.Production.json">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
 </Project>

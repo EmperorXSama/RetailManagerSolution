@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
-        <Nullable>enable</Nullable>
+        <Nullable>disable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <UserSecretsId>aspnet-RetailManagerDataManagemeent.Api-162B60B1-2843-411E-AD12-465B90DB604B</UserSecretsId>
     </PropertyGroup>
