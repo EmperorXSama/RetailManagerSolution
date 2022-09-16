@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Data;
 using AutoMapper;
 using Caliburn.Micro;
+using Microsoft.Extensions.Configuration;
 using RMWPFUserInterface.Library.Helpers;
 using RMWPFUserInterface.Library.Models;
 using RMWPFUserInterfice.Models;
@@ -16,16 +17,17 @@ namespace RMWPFUserInterfice.ViewModels;
 
 public class SalesViewModel : Screen
 {
+    private IConfiguration _config;
     private readonly IProductEndPoint _productEndPoint;
     private readonly ILoggedInUserModel _loggerUser;
 
     public SalesViewModel(IProductEndPoint productEndPoint , ILoggedInUserModel loggerUser, ProductDisplayModel selectedProduct,
-        IConfigHelper configHelper,ISaleEndPoint saleEndPoint , IMapper mapper , StatusInfoViewModel status , IWindowManager windowManager)
+        IConfiguration config,ISaleEndPoint saleEndPoint , IMapper mapper , StatusInfoViewModel status , IWindowManager windowManager)
     {
+        _config = config;
         _productEndPoint = productEndPoint;
         _loggerUser = loggerUser;
         _selectedProduct = selectedProduct;
-        _configHelper = configHelper;
         _saleEndPoint = saleEndPoint;
         _mapper = mapper;
         _status = status;
@@ -84,7 +86,6 @@ public class SalesViewModel : Screen
         }
     }
     //=======================================
-    private readonly IConfigHelper _configHelper;
     private readonly ISaleEndPoint _saleEndPoint;
     private readonly IMapper _mapper;
     private readonly StatusInfoViewModel _status;
@@ -262,7 +263,7 @@ public class SalesViewModel : Screen
     private decimal CalculatingTaxAmount()
     {
         decimal taxAmount = 0;
-        decimal taxRate = _configHelper.GetTaxRate()/100;
+        decimal taxRate = _config.GetValue<decimal>("TaxRate")/100;
 
         foreach (var CartItemDisplayModel in Cart)
         {

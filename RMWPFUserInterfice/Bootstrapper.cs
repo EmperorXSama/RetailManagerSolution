@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Windows;
 using AutoMapper;
 using Caliburn.Micro;
+using Microsoft.Extensions.Configuration;
 using RMWPFUserInterface.Library.Helpers;
 using RMWPFUserInterface.Library.Models;
 using RMWPFUserInterfice.Models;
@@ -31,6 +33,21 @@ public class Bootstrapper : BootstrapperBase
         var output = config.CreateMapper();
         return output;
     }
+
+    private IConfiguration AddConfiguration()
+    {
+        IConfigurationBuilder builder = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsittings.json");
+        
+        #if DEBUG
+        builder.AddJsonFile("appsittings.Development.json", optional: true,reloadOnChange:true);
+        #else
+         builder.AddJsonFile("appsittings.Production.json", optional: true,reloadOnChange:true);
+        #endif
+
+        return builder.Build();
+    }
     protected override void Configure()
     {
         _container.Instance(ConfigureAutoMapper());
@@ -42,11 +59,11 @@ public class Bootstrapper : BootstrapperBase
         _container
             .Singleton<IWindowManager, WindowManager>()
             .Singleton<IEventAggregator, EventAggregator>()
-            .Singleton<IConfigHelper ,ConfigHelper>()
             .Singleton<ILoggedInUserModel,LoggedInUserModel>()
             .Singleton<HttpClient>()
             .Singleton<IApiHelper, ApiHelper>();
         
+        _container.RegisterInstance(typeof(IConfiguration),"IConfiguration",AddConfiguration());
         
         GetType().Assembly.GetTypes()
             .Where(type => type.IsClass)

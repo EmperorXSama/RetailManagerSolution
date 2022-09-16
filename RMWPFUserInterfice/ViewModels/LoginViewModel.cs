@@ -24,11 +24,11 @@ public class LoginViewModel : Screen
         _apiHelper = apiHelper;
         _loggedInUserModel = loggedInUserModel;
         _eventHandler = eventHandler;
+        
 
     }
     public async Task LogIn(object sender, RoutedEventArgs e)
     {
-        _apiHelper = new ApiHelper(_loggedInUserModel);
         AuthenticationResult authResult = null;
 
         var app = App.PublicClientApp;

@@ -1,25 +1,28 @@
-﻿using System.Configuration;
-using System.Net.Http.Headers;
+﻿using System.Net.Http.Headers;
+using Microsoft.Extensions.Configuration;
 using RMWPFUserInterface.Library.Models;
+using ConfigurationManager = System.Configuration.ConfigurationManager;
 
 namespace RMWPFUserInterface.Library.Helpers;
 
 public class ApiHelper : IApiHelper
 {
     private  ILoggedInUserModel _loggedInUser;
+    private readonly IConfiguration _config;
     private HttpClient _apiClient = new HttpClient();
 
     public HttpClient ApiClient => _apiClient;
 
-    public ApiHelper(ILoggedInUserModel loggedInUser)
+    public ApiHelper(ILoggedInUserModel loggedInUser , IConfiguration config)
     {
         _loggedInUser = loggedInUser;
+        _config = config;
         InitializeClient();
     }
 
     private void InitializeClient()
     {
-        string api = ConfigurationManager.AppSettings["api"]!;
+        string api = _config.GetValue<string>("api");
 
         _apiClient.BaseAddress = new Uri(api);
         _apiClient.DefaultRequestHeaders.Accept.Clear();

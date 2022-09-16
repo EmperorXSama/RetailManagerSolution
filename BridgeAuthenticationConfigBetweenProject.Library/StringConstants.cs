@@ -2,5 +2,5 @@
 
 public static class StringConstants
 {
-    public static string SqlConnectionName = "DefaultConnection";
+    public static string SqlConnectionName = "RetailData";
 }
