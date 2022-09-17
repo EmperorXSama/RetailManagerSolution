@@ -18,6 +18,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Database", "Database", "{79
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Portal", "Portal\Portal.csproj", "{CEDF9DEC-C2CD-48C7-9E7B-4B1A9254DE99}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Protal.Library", "Protal.Library\Protal.Library.csproj", "{478320CC-CD98-4D29-ABE1-4004761B988C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -48,6 +50,10 @@ Global
 		{CEDF9DEC-C2CD-48C7-9E7B-4B1A9254DE99}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CEDF9DEC-C2CD-48C7-9E7B-4B1A9254DE99}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CEDF9DEC-C2CD-48C7-9E7B-4B1A9254DE99}.Release|Any CPU.Build.0 = Release|Any CPU
+		{478320CC-CD98-4D29-ABE1-4004761B988C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{478320CC-CD98-4D29-ABE1-4004761B988C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{478320CC-CD98-4D29-ABE1-4004761B988C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{478320CC-CD98-4D29-ABE1-4004761B988C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{A5676156-96DC-457F-9819-8B5EDD8F7866} = {24349BC2-8C44-4CBC-BC01-01D6A23B8A36}

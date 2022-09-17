@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
-        <Nullable>enable</Nullable>
+        <Nullable>disable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
 
@@ -11,6 +11,11 @@
         <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.9" PrivateAssets="all" />
         <PackageReference Include="Microsoft.Authentication.WebAssembly.Msal" Version="6.0.9" />
         <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Protal.Library\Protal.Library.csproj" />
+      <ProjectReference Include="..\RMWPFUserInterface.Library\RMWPFUserInterface.Library.csproj" />
     </ItemGroup>
 
 </Project>

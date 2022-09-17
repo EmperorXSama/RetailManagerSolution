@@ -1,13 +1,61 @@
 ﻿@page "/"
+@using Protal.Library
+@inject IHttpClientFactory ClientFactory
+
 
 <PageTitle>Index</PageTitle>
 
-<h1>Hello, world!</h1>
+<h1 class="text-center text-primary">Retail Manager Portal</h1>
 
-<div class="alert alert-warning" role="alert">
-    Before authentication will function correctly, you must configure your provider details in <code>Program.cs</code>
+<div class="container-fluid">
+    <div class="row">
+        @if (products.Count > 0)
+        {
+            foreach (var pro in products)
+            {
+                
+                <div class="col-xl-4 col-lg-6 mb-3">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-12">
+                                <a href="">
+                                    <img src="https://dummyimage.com/1200x900/000/fff" class="img-fluid" alt="placeholder image" />
+                                </a>
+                                <p class="my-2 text-justify">
+                                    A placeholder example on how this will look in a full page
+                                </p>
+                                <p class="my-1">
+                                    <strong>Quantity:</strong> @pro.QuantityInStock
+                                </p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="h4 mb-3">Sample Item - $0.00</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
 </div>
 
-Welcome to your new app.
-
-<SurveyPrompt Title="How is Blazor working for you?"/>
+@code
+{
+    List<ProductsModel> products = new List<ProductsModel>();
+    protected override async  Task OnInitializedAsync()
+    {
+        try
+        {
+            var client = ClientFactory.CreateClient(ApiEndPoints.ApiClientName);
+            products = await client.GetFromJsonAsync<List<ProductsModel>>(ApiEndPoints.GetProductEndPoint);
+        }
+        
+        catch (AccessViolationException e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+    }
