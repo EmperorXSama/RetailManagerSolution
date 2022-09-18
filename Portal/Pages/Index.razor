@@ -1,6 +1,8 @@
 ﻿@page "/"
 @using Protal.Library
 @inject IHttpClientFactory ClientFactory
+@inject IConfiguration _configuration
+@inject Blazored.LocalStorage.ILocalStorageService _localStorageService
 
 
 <PageTitle>Index</PageTitle>
@@ -8,48 +10,91 @@
 <h1 class="text-center text-primary">Retail Manager Portal</h1>
 
 <div class="container-fluid">
-    <div class="row">
-        @if (products.Count > 0)
-        {
-            foreach (var pro in products)
+    @if (products is null)
+    {
+        <div class="row">
+            <p>No product has been loaded!</p>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+
+            @foreach (var pro in products)
             {
-                
-                <div class="col-xl-4 col-lg-6 mb-3">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-12">
-                                <a href="">
-                                    <img src="https://dummyimage.com/1200x900/000/fff" class="img-fluid" alt="placeholder image" />
-                                </a>
-                                <p class="my-2 text-justify">
-                                    A placeholder example on how this will look in a full page
-                                </p>
-                                <p class="my-1">
-                                    <strong>Quantity:</strong> @pro.QuantityInStock
-                                </p>
-                            </div>
+
+            <div class="col-xl-4 col-lg-6 mb-3">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12">
+                            <a href="">
+                                @if (pro.ProductImage is null)
+                                {
+                                    <img src="https://dummyimage.com/1200x900/000/fff" class="img-fluid" alt="placeholder image"/>
+                                }
+                                else
+                                {
+                                    <img src="@($"{api}{pro.ProductImage}")" class="img-fluid" alt="placeholder image"/>
+                                }
+                               
+                            </a>
+                            <p class="my-2 text-justify">
+                                @pro.Description
+                            </p>
+                            <p class="my-1">
+                                <strong>Quantity:</strong> @pro.QuantityInStock
+                            </p>
                         </div>
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="h4 mb-3">Sample Item - $0.00</div>
-                            </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="h4 mb-3">@pro.ProductName - @pro.RetailPrice</div>
                         </div>
                     </div>
                 </div>
+            </div>
             }
-        }
-    </div>
+        </div>
+    }
 </div>
 
 @code
 {
-    List<ProductsModel> products = new List<ProductsModel>();
+    List<ProductsModel> products;
+    string api;
+    private const string ProductListName = "ProductsList";
+    private const string ProductCashDate = "ProductsCashDate";
     protected override async  Task OnInitializedAsync()
     {
+        api = _configuration.GetValue<string>("api");
         try
         {
-            var client = ClientFactory.CreateClient(ApiEndPoints.ApiClientName);
-            products = await client.GetFromJsonAsync<List<ProductsModel>>(ApiEndPoints.GetProductEndPoint);
+            products = await _localStorageService.GetItemAsync<List<ProductsModel>>(ProductListName);
+            DateTime? cacheDate = await _localStorageService.GetItemAsync<DateTime>(ProductCashDate);
+            double totalMin = 0;
+            
+            if (cacheDate is not null)
+            {
+                totalMin = DateTime.UtcNow.Subtract((DateTime)cacheDate).TotalMinutes;
+            }
+            
+            if (products is null || cacheDate is null || totalMin > 10)
+            {
+                try
+                {
+                    var client = ClientFactory.CreateClient(ApiEndPoints.ApiClientName);
+                    products = await client.GetFromJsonAsync<List<ProductsModel>>(ApiEndPoints.GetProductEndPoint);
+                    await _localStorageService.SetItemAsync(ProductListName, products);
+                    await _localStorageService.SetItemAsync(ProductCashDate, DateTime.UtcNow);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                    throw;
+                }
+                
+            }
+           
         }
         
         catch (AccessViolationException e)

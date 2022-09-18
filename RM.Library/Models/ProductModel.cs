@@ -8,4 +8,5 @@ public class ProductModel
     public decimal RetailPrice { get; set; }
     public int QuantityInStock { get; set; }
     public bool IsTaxable { get; set; }
+    public string ProductImage { get; set; }
 }

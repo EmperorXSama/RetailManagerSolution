@@ -1,3 +1,4 @@
+using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
@@ -15,6 +16,7 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.
 builder.Services.AddScoped<CustomAuthorizationMessageHandler>();
 builder.Services.AddHttpClient(ApiEndPoints.ApiClientName, client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress))
     .AddHttpMessageHandler<CustomAuthorizationMessageHandler>();
+builder.Services.AddBlazoredLocalStorage();
 
 // Supply HttpClient instances that include access tokens when making requests to the server project
 builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient(ApiEndPoints.ApiClientName));

@@ -74,6 +74,8 @@ app.UseSwaggerUI(c =>
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
     c.RoutePrefix =  String.Empty;
 });
+app.UseDefaultFiles();
+app.UseStaticFiles();
 app.UseHttpsRedirection();
 app.UseRouting();
 app.UseCors(MyAllowSpecificOrigins);
