@@ -16,6 +16,7 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.
 builder.Services.AddScoped<CustomAuthorizationMessageHandler>();
 builder.Services.AddHttpClient(ApiEndPoints.ApiClientName, client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress))
     .AddHttpMessageHandler<CustomAuthorizationMessageHandler>();
+
 builder.Services.AddBlazoredLocalStorage();
 
 // Supply HttpClient instances that include access tokens when making requests to the server project

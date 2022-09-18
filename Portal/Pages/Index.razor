@@ -1,66 +1,51 @@
-﻿@page "/"
+﻿@page "/Products"
 @using Protal.Library
 @inject IHttpClientFactory ClientFactory
 @inject IConfiguration _configuration
-@inject Blazored.LocalStorage.ILocalStorageService _localStorageService
+@inject  Blazored.LocalStorage.ILocalStorageService _localStorageService
 
 
-<PageTitle>Index</PageTitle>
 
-<h1 class="text-center text-primary">Retail Manager Portal</h1>
-
-<div class="container-fluid">
-    @if (products is null)
+@if (products is not null || products.Count > 0)
+{
+    <div class="container mx-auto grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 pt-6 gap-8">
+    @foreach (var prod in products)
     {
-        <div class="row">
-            <p>No product has been loaded!</p>
-        </div>
-    }
-    else
-    {
-        <div class="row">
-
-            @foreach (var pro in products)
-            {
-
-            <div class="col-xl-4 col-lg-6 mb-3">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-12">
-                            <a href="">
-                                @if (pro.ProductImage is null)
-                                {
-                                    <img src="https://dummyimage.com/1200x900/000/fff" class="img-fluid" alt="placeholder image"/>
-                                }
-                                else
-                                {
-                                    <img src="@($"{api}{pro.ProductImage}")" class="img-fluid" alt="placeholder image"/>
-                                }
-                               
-                            </a>
-                            <p class="my-2 text-justify">
-                                @pro.Description
-                            </p>
-                            <p class="my-1">
-                                <strong>Quantity:</strong> @pro.QuantityInStock
-                            </p>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="h4 mb-3">@pro.ProductName - @pro.RetailPrice</div>
-                        </div>
-                    </div>
+        <div class="rounded border-gray-300 dark:border-gray-700 ">
+            <div class="max-w-xs bg-white shadow-lg rounded-lg overflow-hidden my-10  justify-between">
+                <div class="px-4 py-2">
+                    <h1 class="text-gray-900 font-bold text-3xl uppercase">@prod.ProductName</h1>
+                    <p class="text-gray-600 text-sm mt-1 ">@prod.Description</p>
+                </div>
+                @if (String.IsNullOrWhiteSpace(prod.ProductImage))
+                {
+                    <img class="h-56 w-full object-cover mt-2" src="https://dummyimage.com/600x400/000/ffffff&text=No+Content" alt="NIKE AIR">
+                }
+                else
+                {
+                    <img class="h-56 w-full object-cover mt-2" src="@($"{api}{prod.ProductImage}")" alt="NIKE AIR">
+                }
+                
+                <div class="flex items-center justify-between px-4 py-2 bg-gray-900">
+                    <h1 class="text-gray-200 font-bold text-xl">$@prod.RetailPrice</h1>
+                    <button class="px-3 py-1 bg-gray-200 text-sm text-gray-900 font-semibold rounded">Add to card</button>
                 </div>
             </div>
-            }
         </div>
     }
-</div>
+    </div>
+}
+else
+{
+    <h1>Loading...</h1>
+}
+
+
+
 
 @code
 {
-    List<ProductsModel> products;
+    List<ProductsModel> products = new List<ProductsModel>();
     string api;
     private const string ProductListName = "ProductsList";
     private const string ProductCashDate = "ProductsCashDate";

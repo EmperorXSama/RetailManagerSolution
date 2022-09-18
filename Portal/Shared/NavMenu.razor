@@ -1,40 +1,79 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">Portal</a>
-        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+﻿@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+
+@inject NavigationManager Navigation
+@inject SignOutSessionStateManager SignOutManager
+
+<nav class="fixed top-0 left-0 bg-white w-full shadow">
+    <div class="container m-auto flex justify-between items-center text-gray-700">
+        <h1 class="pl-8 py-4 text-xl font-bold">Retail Manager</h1>
+        <ul class="hidden md:flex items-center pr-10 text-base font-semibold cursor-pointer">
+            <li class="hover:bg-gray-200 py-4 px-6"><a href="/">Home</a></li>
+            <li class="hover:bg-gray-200 py-4 px-6"><a href="/Products">Products</a></li>
+            <AuthorizeView>
+                <Authorized>
+                    <li class="hover:bg-gray-200 py-4 px-6">Inventory</li>
+                    <li class="hover:bg-gray-200 py-4 px-6">Sells</li>
+                </Authorized>
+            </AuthorizeView>
+            <li class="hover:bg-gray-200 py-4 px-6">About</li>
+        </ul>
+        <div class="hidden md:flex items-center px-4 mx-4 pr-10 text-base font-semibold cursor-pointer">
+            <AuthorizeView>
+                <Authorized>
+              
+                    <h4 class="m-auto">Hello, @context.User.Identity?.Name!</h4>
+                    
+                    <button class="nav-link btn btn-link" @onclick="BeginLogout">Log out</button>
+      
+
+                </Authorized>
+                <NotAuthorized>
+                    <a href="authentication/login">Log in</a>
+                </NotAuthorized>
+            
+            </AuthorizeView>
+        </div>
+        <button class="block md:hidden py-3 px-4 mx-2 rounded focus:outline-none hover:bg-gray-200 group">
+                <div class="w-5 h-1 bg-gray-600 mb-1"></div>
+                <div class="w-5 h-1 bg-gray-600 mb-1"></div>
+                <div class="w-5 h-1 bg-gray-600"></div>
+                <div class="absolute top-0 -right-full h-screen w-8/12 bg-white border opacity-0 group-focus:right-0 group-focus:opacity-100 transition-all duration-300">
+                    <ul class="flex flex-col items-center w-full text-base cursor-pointer pt-10">
+                        <li class="hover:bg-gray-200 py-4 px-6 w-full">Home</li>
+                        <li class="hover:bg-gray-200 py-4 px-6 w-full">Products</li>
+                        <AuthorizeView>
+                            <Authorized>
+                                <li class="hover:bg-gray-200 py-4 px-6 w-full">Inventory</li>
+                                <li class="hover:bg-gray-200 py-4 px-6 w-full">Sells</li>
+                            </Authorized>
+                        </AuthorizeView>
+                        <li class="hover:bg-gray-200 py-4 px-6 w-full">About</li>
+                        <AuthorizeView>
+                            <Authorized>
+                                <div class="hidden md:flex items-center px-4 mx-4 pr-10 text-base font-semibold cursor-pointer">
+                                    <h4 class="m-auto">Hello, @context.User.Identity?.Name!</h4>
+
+                                    <button class="nav-link btn btn-link" @onclick="BeginLogout">Log out</button>
+                                </div>
+
+                            </Authorized>
+                            <NotAuthorized>
+                                <li class="hover:bg-gray-200 py-4 px-6 w-full"><a href="authentication/login">Log in</a></li>
+                            </NotAuthorized>
+                        </AuthorizeView>
+                    </ul>
+                </div>
+            </button>
     </div>
-</div>
+</nav>
 
-<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
-    <nav class="flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> Home
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="oi oi-plus" aria-hidden="true"></span> Counter
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="fetchdata">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Fetch data
-            </NavLink>
-        </div>
-    </nav>
-</div>
+@code{
 
-@code {
-    private bool collapseNavMenu = true;
-
-    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
-
-    private void ToggleNavMenu()
+    private async Task BeginLogout(MouseEventArgs args)
     {
-        collapseNavMenu = !collapseNavMenu;
+        await SignOutManager.SetSignOutState();
+        Navigation.NavigateTo("authentication/logout");
     }
 
 }
